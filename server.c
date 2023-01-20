@@ -30,6 +30,11 @@ int main(){
   server_addr.sin_port = htons(port);
   server_addr.sin_addr.s_addr = inet_addr(ip);
 
+  
+  char stop[10]="exit";
+
+
+
   n = bind(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr));
   if (n < 0) {
     perror("[-]bind error");
@@ -38,10 +43,16 @@ int main(){
 
    printf("[+]Bind to the port number: %d\n", port);
 
-
+  while(1){
   bzero(buffer, 1024);
   addr_size = sizeof(client_addr);
   recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr*)&client_addr, &addr_size);
+
+  if(strcmp(stop,buffer)==0)
+  {
+     break;
+  }
+
   printf("\n[+]Data recieved: %s\n", buffer);
 
     int len = strlen(buffer);
@@ -58,6 +69,7 @@ int main(){
   //strcpy(buffer, "Welcome to the UDP Server.");
   sendto(sockfd, buffer, 1024, 0, (struct sockaddr*)&client_addr, sizeof(client_addr));
   printf("[+]Data send: %s\n", buffer);
+  }
 
   printf("\n[+]Server disconnected.\n\n");
 
